@@ -1,0 +1,104 @@
+{
+  "system_prompt": {
+    "role": "You are an elite football data analyst and betting strategist specializing in BTTS (Both Teams To Score) and Over 2.5 Goals markets. You use real-time data, statistical models, and historical trends to identify high-probability betting opportunities. You think like a quantitative analyst — every recommendation must be backed by data.",
+    "output_format": "Always respond in structured JSON unless told otherwise.",
+    "constraints": [
+      "Never recommend bets without statistical justification",
+      "Always include confidence ratings as percentages",
+      "Flag matches where data is limited or unreliable",
+      "Account for team news, injuries, and suspensions when available",
+      "Consider league-specific scoring patterns"
+    ]
+  },
+
+  "prompts": {
+
+    "1_daily_fixture_scan": {
+      "description": "Run this first each day to get today's fixtures ranked by BTTS and O2.5 probability",
+      "prompt": "Analyze all football matches scheduled for today across the top European leagues (Premier League, La Liga, Bundesliga, Serie A, Ligue 1, Eredivisie, Championship, Scottish Premiership, Portuguese Liga, Turkish Super Lig). For each match, provide a JSON array sorted by combined BTTS + O2.5 probability (highest first). Each match object should include:\n\n```json\n{\n  \"match\": \"Team A vs Team B\",\n  \"league\": \"\",\n  \"kick_off\": \"HH:MM UTC\",\n  \"btts_probability\": 0.00,\n  \"over_2_5_probability\": 0.00,\n  \"combined_score\": 0.00,\n  \"home_goals_scored_avg_last_10\": 0.00,\n  \"home_goals_conceded_avg_last_10\": 0.00,\n  \"away_goals_scored_avg_last_10\": 0.00,\n  \"away_goals_conceded_avg_last_10\": 0.00,\n  \"h2h_btts_rate_last_10\": \"X/10\",\n  \"h2h_over_2_5_rate_last_10\": \"X/10\",\n  \"home_btts_rate_this_season\": \"\",\n  \"away_btts_rate_this_season\": \"\",\n  \"home_over_2_5_rate_this_season\": \"\",\n  \"away_over_2_5_rate_this_season\": \"\",\n  \"confidence\": \"HIGH | MEDIUM | LOW\",\n  \"key_factors\": [],\n  \"risk_flags\": []\n}\n```\n\nOnly include matches with a combined_score above 0.55. Explain your methodology briefly at the end."
+    },
+
+    "2_deep_match_analysis": {
+      "description": "Use this to drill into a specific match for detailed breakdown",
+      "prompt": "Perform a deep statistical analysis on the match: [TEAM A] vs [TEAM B] on [DATE]. Return the following JSON structure:\n\n```json\n{\n  \"match\": \"\",\n  \"league\": \"\",\n  \"analysis_date\": \"\",\n  \"btts_analysis\": {\n    \"probability\": 0.00,\n    \"home_scored_in_pct_home_games\": 0.00,\n    \"away_scored_in_pct_away_games\": 0.00,\n    \"home_conceded_in_pct_home_games\": 0.00,\n    \"away_conceded_in_pct_away_games\": 0.00,\n    \"home_clean_sheets_pct\": 0.00,\n    \"away_clean_sheets_pct\": 0.00,\n    \"home_failed_to_score_pct\": 0.00,\n    \"away_failed_to_score_pct\": 0.00,\n    \"btts_last_5_home\": [],\n    \"btts_last_5_away\": [],\n    \"verdict\": \"\"\n  },\n  \"over_2_5_analysis\": {\n    \"probability\": 0.00,\n    \"home_avg_total_goals_home\": 0.00,\n    \"away_avg_total_goals_away\": 0.00,\n    \"expected_goals_xg_home\": 0.00,\n    \"expected_goals_xg_away\": 0.00,\n    \"combined_xg\": 0.00,\n    \"home_over_2_5_rate_home_games\": 0.00,\n    \"away_over_2_5_rate_away_games\": 0.00,\n    \"last_5_home_total_goals\": [],\n    \"last_5_away_total_goals\": [],\n    \"verdict\": \"\"\n  },\n  \"head_to_head\": {\n    \"last_10_meetings\": [],\n    \"avg_goals_per_meeting\": 0.00,\n    \"btts_hit_rate\": \"\",\n    \"over_2_5_hit_rate\": \"\"\n  },\n  \"form_guide\": {\n    \"home_last_6\": [],\n    \"away_last_6\": [],\n    \"home_form_rating\": 0.00,\n    \"away_form_rating\": 0.00\n  },\n  \"injuries_suspensions\": {\n    \"home_missing_players\": [],\n    \"away_missing_players\": [],\n    \"impact_assessment\": \"\"\n  },\n  \"tactical_context\": {\n    \"home_formation\": \"\",\n    \"away_formation\": \"\",\n    \"home_style\": \"\",\n    \"away_style\": \"\",\n    \"style_matchup_notes\": \"\"\n  },\n  \"final_verdict\": {\n    \"btts_recommendation\": \"YES | NO | SKIP\",\n    \"over_2_5_recommendation\": \"YES | NO | SKIP\",\n    \"btts_and_over_2_5_recommendation\": \"YES | NO | SKIP\",\n    \"confidence\": \"HIGH | MEDIUM | LOW\",\n    \"suggested_stake_pct\": 0.00,\n    \"reasoning\": \"\"\n  }\n}\n```"
+    },
+
+    "3_accumulator_builder": {
+      "description": "Build a BTTS/O2.5 accumulator from today's best picks",
+      "prompt": "From today's football fixtures, build me optimized accumulators for BTTS and Over 2.5 Goals. Return the following JSON:\n\n```json\n{\n  \"date\": \"\",\n  \"accumulators\": {\n    \"btts_acca\": {\n      \"selections\": [\n        {\n          \"match\": \"\",\n          \"league\": \"\",\n          \"kick_off\": \"\",\n          \"btts_probability\": 0.00,\n          \"reasoning\": \"\"\n        }\n      ],\n      \"combined_probability\": 0.00,\n      \"suggested_max_selections\": 0,\n      \"risk_rating\": \"LOW | MEDIUM | HIGH\"\n    },\n    \"over_2_5_acca\": {\n      \"selections\": [],\n      \"combined_probability\": 0.00,\n      \"suggested_max_selections\": 0,\n      \"risk_rating\": \"\"\n    },\n    \"btts_and_over_2_5_acca\": {\n      \"selections\": [],\n      \"combined_probability\": 0.00,\n      \"suggested_max_selections\": 0,\n      \"risk_rating\": \"\"\n    },\n    \"safe_double\": {\n      \"description\": \"2 highest confidence picks\",\n      \"selections\": [],\n      \"combined_probability\": 0.00\n    },\n    \"value_treble\": {\n      \"description\": \"3 picks balancing probability and odds value\",\n      \"selections\": [],\n      \"combined_probability\": 0.00\n    }\n  },\n  \"bankroll_advice\": {\n    \"safe_acca_stake_pct\": 0.00,\n    \"value_acca_stake_pct\": 0.00,\n    \"max_daily_exposure_pct\": 0.00\n  },\n  \"notes\": \"\"\n}\n```\n\nRules:\n- Maximum 5 selections per accumulator\n- Minimum individual leg probability of 60% for safe accas\n- Include at least one 'safe double' with 70%+ individual probabilities\n- Diversify across leagues where possible\n- Flag any correlated selections (same league, similar kick-off times)"
+    },
+
+    "4_league_scoring_trends": {
+      "description": "Get league-level scoring data to understand which leagues are best for BTTS/O2.5",
+      "prompt": "Provide a comprehensive scoring trends analysis for the current season across all major European leagues. Return as JSON:\n\n```json\n{\n  \"season\": \"\",\n  \"analysis_date\": \"\",\n  \"leagues\": [\n    {\n      \"league\": \"\",\n      \"country\": \"\",\n      \"matches_played\": 0,\n      \"avg_goals_per_match\": 0.00,\n      \"btts_percentage\": 0.00,\n      \"over_2_5_percentage\": 0.00,\n      \"over_3_5_percentage\": 0.00,\n      \"clean_sheet_percentage\": 0.00,\n      \"avg_home_goals\": 0.00,\n      \"avg_away_goals\": 0.00,\n      \"highest_scoring_teams\": [],\n      \"most_btts_friendly_teams\": [],\n      \"worst_defences\": [],\n      \"scoring_trend\": \"INCREASING | STABLE | DECREASING\",\n      \"btts_o2_5_sweet_spot_teams\": []\n    }\n  ],\n  \"best_leagues_for_btts\": [],\n  \"best_leagues_for_over_2_5\": [],\n  \"avoid_leagues\": [],\n  \"weekly_trend_notes\": \"\"\n}\n```\n\nSort leagues by combined BTTS + Over 2.5 percentage (highest first). Highlight any mid-season trend shifts."
+    },
+
+    "5_historical_backtest": {
+      "description": "Backtest your strategy against recent results to validate accuracy",
+      "prompt": "Backtest the BTTS and Over 2.5 Goals strategy against last week's fixtures. For each match that would have been flagged as a pick (combined probability above 55%), show whether the bet would have won or lost. Return:\n\n```json\n{\n  \"backtest_period\": \"\",\n  \"total_matches_analyzed\": 0,\n  \"matches_qualifying\": 0,\n  \"results\": {\n    \"btts\": {\n      \"picks_made\": 0,\n      \"wins\": 0,\n      \"losses\": 0,\n      \"strike_rate\": 0.00,\n      \"results\": [\n        {\n          \"match\": \"\",\n          \"score\": \"\",\n          \"predicted_probability\": 0.00,\n          \"result\": \"WIN | LOSS\",\n          \"notes\": \"\"\n        }\n      ]\n    },\n    \"over_2_5\": {\n      \"picks_made\": 0,\n      \"wins\": 0,\n      \"losses\": 0,\n      \"strike_rate\": 0.00,\n      \"results\": []\n    },\n    \"btts_and_over_2_5\": {\n      \"picks_made\": 0,\n      \"wins\": 0,\n      \"losses\": 0,\n      \"strike_rate\": 0.00,\n      \"results\": []\n    }\n  },\n  \"acca_simulation\": {\n    \"safe_double_result\": \"\",\n    \"value_treble_result\": \"\",\n    \"full_acca_result\": \"\"\n  },\n  \"lessons\": [],\n  \"model_adjustments_suggested\": []\n}\n```\n\nBe honest about failures. Identify patterns in losses to improve future picks."
+    },
+
+    "6_live_match_tracker": {
+      "description": "Track live in-play opportunities for BTTS/O2.5 based on match state",
+      "prompt": "Analyze the current live football matches and identify in-play BTTS and Over 2.5 Goals opportunities. For matches currently at 0-0 or 1-0 at half-time, assess the likelihood of goals in the second half. Return:\n\n```json\n{\n  \"timestamp\": \"\",\n  \"live_opportunities\": [\n    {\n      \"match\": \"\",\n      \"current_score\": \"\",\n      \"minute\": 0,\n      \"btts_live_probability\": 0.00,\n      \"over_2_5_live_probability\": 0.00,\n      \"match_momentum\": \"HOME | AWAY | EVEN\",\n      \"shots_home\": 0,\n      \"shots_away\": 0,\n      \"shots_on_target_home\": 0,\n      \"shots_on_target_away\": 0,\n      \"xg_home_live\": 0.00,\n      \"xg_away_live\": 0.00,\n      \"corners_home\": 0,\n      \"corners_away\": 0,\n      \"possession_home\": 0,\n      \"possession_away\": 0,\n      \"red_cards\": [],\n      \"in_play_recommendation\": \"\",\n      \"reasoning\": \"\"\n    }\n  ],\n  \"best_in_play_bet\": {},\n  \"avoid\": []\n}\n```\n\nPrioritize matches where the underlying stats suggest goals are coming despite a low scoreline."
+    },
+
+    "7_value_odds_finder": {
+      "description": "Compare your model probabilities against bookmaker odds to find value",
+      "prompt": "For today's top BTTS and Over 2.5 picks, compare my model's estimated probabilities against typical bookmaker odds to identify value bets. A value bet exists when my probability estimate exceeds the implied probability from the odds. Return:\n\n```json\n{\n  \"date\": \"\",\n  \"value_bets\": [\n    {\n      \"match\": \"\",\n      \"market\": \"BTTS | OVER 2.5 | BTTS & OVER 2.5\",\n      \"model_probability\": 0.00,\n      \"typical_bookmaker_odds\": 0.00,\n      \"implied_probability\": 0.00,\n      \"edge_percentage\": 0.00,\n      \"value_rating\": \"STRONG | MODERATE | MARGINAL\",\n      \"kelly_criterion_stake_pct\": 0.00,\n      \"reasoning\": \"\"\n    }\n  ],\n  \"best_value_bet_of_the_day\": {},\n  \"total_expected_value\": 0.00,\n  \"bankroll_strategy\": {\n    \"unit_size_recommendation\": \"\",\n    \"max_exposure_today\": \"\",\n    \"staking_plan\": \"FLAT | KELLY | PROPORTIONAL\"\n  }\n}\n```\n\nOnly flag bets with a positive edge of 5% or more. Use the Kelly Criterion to suggest optimal stake sizing but cap at quarter-Kelly for safety."
+    },
+
+    "8_weekly_report": {
+      "description": "End of week performance review and next week preview",
+      "prompt": "Generate a comprehensive weekly report covering this week's betting performance and next week's outlook. Return:\n\n```json\n{\n  \"week\": \"\",\n  \"performance_summary\": {\n    \"total_bets_placed\": 0,\n    \"wins\": 0,\n    \"losses\": 0,\n    \"overall_strike_rate\": 0.00,\n    \"btts_strike_rate\": 0.00,\n    \"over_2_5_strike_rate\": 0.00,\n    \"profit_loss_units\": 0.00,\n    \"roi_percentage\": 0.00,\n    \"best_bet\": {},\n    \"worst_bet\": {},\n    \"acca_results\": []\n  },\n  \"patterns_identified\": {\n    \"best_performing_leagues\": [],\n    \"worst_performing_leagues\": [],\n    \"best_kick_off_times\": [],\n    \"model_blind_spots\": [],\n    \"improvement_actions\": []\n  },\n  \"next_week_preview\": {\n    \"key_fixtures\": [],\n    \"early_btts_picks\": [],\n    \"early_over_2_5_picks\": [],\n    \"leagues_to_focus\": [],\n    \"leagues_to_avoid\": [],\n    \"notes\": \"\"\n  }\n}\n```"
+    }
+  },
+
+  "workflow": {
+    "description": "Recommended daily workflow for using these prompts",
+    "steps": [
+      "1. Morning: Run prompt 4 (league trends) weekly on Mondays to update your league knowledge",
+      "2. Morning: Run prompt 1 (daily fixture scan) to get today's ranked matches",
+      "3. Mid-morning: Run prompt 2 (deep analysis) on your top 3-5 picks from the scan",
+      "4. Pre-match: Run prompt 3 (accumulator builder) to structure your bets",
+      "5. Pre-match: Run prompt 7 (value odds finder) to confirm value exists",
+      "6. In-play: Run prompt 6 (live tracker) during matches for in-play opportunities",
+      "7. Evening: Run prompt 5 (backtest) against today's results",
+      "8. Sunday: Run prompt 8 (weekly report) for performance review"
+    ]
+  },
+
+  "grok_setup_instructions": {
+    "description": "How to use this system in Grok",
+    "steps": [
+      "1. Open Grok (x.com/i/grok or grok.x.ai)",
+      "2. Start a new conversation",
+      "3. Paste the system_prompt as your first message to set context",
+      "4. Use each numbered prompt as needed following the workflow",
+      "5. Grok has real-time X/Twitter data access — ask it to cross-reference with live team news and fan sentiment",
+      "6. Ask Grok to search X for latest injury updates before finalizing picks",
+      "7. Export responses by copying the JSON output into a spreadsheet or tracker"
+    ],
+    "grok_specific_tips": [
+      "Ask Grok to search X for '[Team Name] team news today' before each deep analysis",
+      "Use Grok's real-time capability to check for last-minute lineup changes",
+      "Ask Grok to find what football tipsters on X are saying about your picks for sentiment confirmation",
+      "Grok can access live scores — use prompt 6 during matches for real-time in-play analysis"
+    ]
+  },
+
+  "data_sources_to_request": {
+    "description": "Tell Grok to pull from these when analyzing",
+    "sources": [
+      "Current season league tables and standings",
+      "Last 10 match results for each team (home/away split)",
+      "Head-to-head records (last 10 meetings)",
+      "Expected Goals (xG) data where available",
+      "Team news from X/Twitter posts",
+      "Historical BTTS and Over 2.5 rates by league",
+      "Referee statistics (cards, penalties, average fouls)",
+      "Weather conditions for outdoor matches",
+      "Managerial records and tactical tendencies"
+    ]
+  }
+}
